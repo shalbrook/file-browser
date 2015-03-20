@@ -1,0 +1,19 @@
+.folderlist {
+  list-style: none;
+  padding-left: 30px;
+}
+.folderlist li.folder {
+  background-image: url(folder.png);
+  padding-left: 30px;
+  background-repeat: no-repeat;
+}
+table#filebrowsericonkey tr td {
+  padding: 5px;
+}
+table#filebrowsericonkey tr td img {
+  vertical-align: middle;
+}
+.filebrowserheader {
+  font-size: 1.6em;
+  font-weight: bold;
+}
