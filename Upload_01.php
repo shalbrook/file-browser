@@ -1,4 +1,5 @@
 <?php
+// from PHP SOLUTIONS, with some modifications
 class Ps2_Upload {
 	
   protected $_uploaded = array();
