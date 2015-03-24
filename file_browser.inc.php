@@ -1,3 +1,9 @@
+<!--
+3-22-15: requested mods for ko:
+1. collapsible directory lists
+2. editable dir. names (could provide editable filenames via the same method)
+3. files and dirs. sorted by name
+-->
   <div align="center">
     <p class="filebrowserheader">File browser</p>
     <table id="filebrowsericonkey">
