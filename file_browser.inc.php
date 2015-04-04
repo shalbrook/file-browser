@@ -1,7 +1,10 @@
 <!--
 3-22-15: requested mods for ko:
-1. collapsible directory lists
+1. collapsible directory lists.
+this works when you click it but it's not obvious. maybe make the icon
+a folder with a plus/minus in it?
 2. editable dir. names (could provide editable filenames via the same method)
+use a pencil icon and a move command, similar to what's there now.
 3. files and dirs. sorted by name
 -->
   <div align="center">
@@ -12,7 +15,8 @@
       <td><img src="delete.png"> Delete file or folder</td>
       <td><img src="arrow_up.png"> Upload file</td>
       <td><img src="arrow_down.png"> Download file</td>
-      <td><img src="folder_new.png"> Create new subfolder</td></tr>
+      <td><img src="folder_new.png"> Create new subfolder</td>
+      <td><img src="pencil-go-icon.png"> Edit file / folder name</td></tr>
     </table>
   </div>
 
@@ -48,6 +52,23 @@ if ( $_GET['action'] == 'delete' ) {
     $result = array( 'New folder ' . $_POST['newf'] . ' created successfully.' );
   } else {
     $result = array( 'Could not create folder.' );
+  }
+
+} elseif ( isset( $_POST['rename'] ) ) {
+  if ( !preg_match( '/^[0-9A-Za-z\-_ \.]+$/', $_POST['newname'] ) ) {
+    $result = array( 'You entered '.$_POST['newname'].'. New name must contain only letters and numbers.' );
+  } else {
+    $oldfilename = $base;
+    if ( isset( $_POST['basef'] ) ) $oldfilename .= $_POST['basef'].'/';
+    $oldfilename .= $_POST['oldname'];
+    $newfilename = $base;
+    if ( isset( $_POST['basef'] ) ) $newfilename .= $_POST['basef'].'/';
+    $newfilename .= $_POST['newname'];
+    if ( rename ($oldfilename, $newfilename)) {
+      $result = array( 'Successfully renamed.');
+    } else {
+      $result = array(' Could not rename.');
+    }
   }
 } elseif ( isset( $_POST['upload'] ) ) {
   $destination = $base;
@@ -110,11 +131,25 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
     echo "<li";
     if ( $objects->isDir() ) echo ' class="folder"';
     echo ">".$objects->getFilename();
+
+    // buttons
+    echo '<span class="buttons">';
     echo ' <a href="index.php?action=delete&base='.$abbrev.'&file='.rawurlencode( $objects->getSubPathname() ).'"><img src="delete.png" border="0"></a>';
+
+
+    // add code here to edit name
+    ?>
+    <a class="edit_icon"><img src="pencil-go-icon.png" border="0"></a>
+<div class="edit_div" style="float:right">
+      New name: <form action="index.php" method="post">
+      <input type="hidden" name="base" value="<?php echo $abbrev; ?>"><input type="hidden" name="basef" value="<?php echo $objects->getSubPath(); ?>">
+      <input type="hidden" name="oldname" value="<? echo $objects->getFilename(); ?>">
+      <input type="text" name="newname"><input type="submit" name="rename" value="Rename"></form></div>
+<?
     if ( $objects->isDir() ) {
 ?>
   <a class="arrow_up_icon"><img src="arrow_up.png"></a>
-      <div class="upload_div">
+      <div class="upload_div" style="float:right">
       <label for="image">Upload file:</label>
       <form action="index.php" method="post" enctype="multipart/form-data" id="uploadImage">
       <input type="hidden" name="base" value="<?php echo $abbrev; ?>">
@@ -124,7 +159,7 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
       <input type="submit" name="upload" id="upload" value="Upload"></form></div>
 
 <a class="folder_new_icon"><img src="folder_new.png" border="0"></a>
-<div class="newfolder_div">
+<div class="newfolder_div" style="float:right">
       New subfolder: <form action="index.php" method="post">
       <input type="hidden" name="base" value="<?php echo $abbrev; ?>"><input type="hidden" name="basef" value="<?php echo $objects->getSubPathname(); ?>">
       <input type="text" name="newf"><input type="submit" name="subf" value="Create"></form></div>
@@ -132,7 +167,7 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
       <a href="index.php?dl=1&base=<?php echo $abbrev; ?>&file=<?php echo rawurlencode( $objects->getSubPathname() ); ?>">
       <img src="arrow_down.png" border="0"></a>
     <?php }
-    echo "</li>\n";
+    echo "</span></li>\n";
   }
 ?>
   </ul></ul>

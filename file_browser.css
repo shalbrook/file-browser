@@ -2,6 +2,10 @@
   list-style: none;
   padding-left: 30px;
 }
+.folderlist li {
+	padding: 5px;
+	border: 1px dotted lightgray;
+}
 .folderlist li.folder {
   background-image: url(folder.png);
   padding-left: 30px;
@@ -16,4 +20,7 @@ table#filebrowsericonkey tr td img {
 .filebrowserheader {
   font-size: 1.6em;
   font-weight: bold;
+}
+.buttons {
+	float:right;
 }
