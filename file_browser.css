@@ -4,12 +4,15 @@
 }
 .folderlist li {
 	padding: 5px;
-	border: 1px dotted lightgray;
+	border-bottom: 1px solid lightgray;
 }
 .folderlist li.folder {
-  background-image: url(folder.png);
+  background-image: url(folder_minus.png);
   padding-left: 30px;
   background-repeat: no-repeat;
+}
+.plus {
+	background-image: url(folder_plus.png) !important;
 }
 table#filebrowsericonkey tr td {
   padding: 5px;
@@ -23,4 +26,22 @@ table#filebrowsericonkey tr td img {
 }
 .buttons {
 	float:right;
+}
+.edit_div {
+	position:absolute;
+	z-index:100;
+	padding: 8px;
+	background-color: lightgray;
+}
+.upload_div {
+	position:absolute;
+	z-index:100;
+	padding: 8px;
+	background-color: lightgray;
+}
+.newfolder_div {
+	position:absolute;
+	z-index:100;
+	padding: 8px;
+	background-color: lightgray;
 }

@@ -1,11 +1,10 @@
 <!--
-3-22-15: requested mods for ko:
-1. collapsible directory lists.
-this works when you click it but it's not obvious. maybe make the icon
-a folder with a plus/minus in it?
-2. editable dir. names (could provide editable filenames via the same method)
-use a pencil icon and a move command, similar to what's there now.
-3. files and dirs. sorted by name
+4/4/15: requested mods for ko:
+1. collapsible directory lists. done
+2. editable file & dir. names. done
+3. files and dirs. sorted by name. will probably require rewriting
+so that the iterator stores all the files (and associated info about 
+those files) into an array, then sort the array and output it.
 -->
   <div align="center">
     <p class="filebrowserheader">File browser</p>
@@ -87,18 +86,17 @@ if ( $_GET['action'] == 'delete' ) {
 }
 
 if ( isset( $result ) ) {
-  //echo '<br><hr width="600px">';
   foreach ( $result as $message ) {
     echo "<p style=\"border:2px solid lightgray; padding:5px\"><strong>Result:</strong> $message</p>";
   }
 }
 
 echo '<br>';
-//echo '<hr width="600px">';
 
 function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
 <ul class="folderlist">
 <li style="font-size: large"><strong><?php echo $friendlyname; ?></strong>
+  <span class="buttons">
 <a class="arrow_up_icon"><img src="arrow_up.png" border="0"></a>
       <div class="upload_div">
         <label for="image">Upload file:</label>
@@ -112,9 +110,10 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
 <div class="newfolder_div">
       New subfolder: <form action="index.php" method="post">
       <input type="hidden" name="base" value="<?php echo $abbrev; ?>">
-      <input type="text" name="newf"><input type="submit" name="subf" value="Create"></form></div></li>
+      <input type="text" name="newf"><input type="submit" name="subf" value="Create"></form></div></span></li>
 <?php
   // http://php.net/manual/en/class.directoryiterator.php
+
   $last_dir_level = 0;
 
   echo '<ul class="folderlist">';
@@ -137,10 +136,10 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
     echo ' <a href="index.php?action=delete&base='.$abbrev.'&file='.rawurlencode( $objects->getSubPathname() ).'"><img src="delete.png" border="0"></a>';
 
 
-    // add code here to edit name
+    // edit name
     ?>
     <a class="edit_icon"><img src="pencil-go-icon.png" border="0"></a>
-<div class="edit_div" style="float:right">
+<div class="edit_div">
       New name: <form action="index.php" method="post">
       <input type="hidden" name="base" value="<?php echo $abbrev; ?>"><input type="hidden" name="basef" value="<?php echo $objects->getSubPath(); ?>">
       <input type="hidden" name="oldname" value="<? echo $objects->getFilename(); ?>">
@@ -149,7 +148,7 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
     if ( $objects->isDir() ) {
 ?>
   <a class="arrow_up_icon"><img src="arrow_up.png"></a>
-      <div class="upload_div" style="float:right">
+      <div class="upload_div">
       <label for="image">Upload file:</label>
       <form action="index.php" method="post" enctype="multipart/form-data" id="uploadImage">
       <input type="hidden" name="base" value="<?php echo $abbrev; ?>">
@@ -159,7 +158,7 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
       <input type="submit" name="upload" id="upload" value="Upload"></form></div>
 
 <a class="folder_new_icon"><img src="folder_new.png" border="0"></a>
-<div class="newfolder_div" style="float:right">
+<div class="newfolder_div">
       New subfolder: <form action="index.php" method="post">
       <input type="hidden" name="base" value="<?php echo $abbrev; ?>"><input type="hidden" name="basef" value="<?php echo $objects->getSubPathname(); ?>">
       <input type="text" name="newf"><input type="submit" name="subf" value="Create"></form></div>

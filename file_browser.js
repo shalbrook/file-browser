@@ -11,7 +11,9 @@ $(document).ready(function() {
   $('a.edit_icon').click(function() {
     $(this).next('.edit_div').toggle();
   });
+
   $('li.folder').click(function() {
   	$(this).next('ul.folderlist').toggle();
-  })
+    $(this).toggleClass('plus');
+  });
 });
