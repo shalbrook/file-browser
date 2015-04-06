@@ -1,15 +1,7 @@
-<!--
-4/4/15: requested mods for ko:
-1. collapsible directory lists. done
-2. editable file & dir. names. done
-3. files and dirs. sorted by name. will probably require rewriting
-so that the iterator stores all the files (and associated info about 
-those files) into an array, then sort the array and output it.
--->
   <div align="center">
     <p class="filebrowserheader">File browser</p>
     <table id="filebrowsericonkey">
-      <tr><th colspan="5" class="filebrowserheader">Key:</th></tr>
+      <tr><th colspan="6" class="filebrowserheader">Key:</th></tr>
       <tr><td><img src="folder.png"> Folder</td>
       <td><img src="delete.png"> Delete file or folder</td>
       <td><img src="arrow_up.png"> Upload file</td>
@@ -63,10 +55,10 @@ if ( $_GET['action'] == 'delete' ) {
     $newfilename = $base;
     if ( isset( $_POST['basef'] ) ) $newfilename .= $_POST['basef'].'/';
     $newfilename .= $_POST['newname'];
-    if ( rename ($oldfilename, $newfilename)) {
-      $result = array( 'Successfully renamed.');
+    if ( rename( $oldfilename, $newfilename ) ) {
+      $result = array( 'Successfully renamed.' );
     } else {
-      $result = array(' Could not rename.');
+      $result = array( ' Could not rename.' );
     }
   }
 } elseif ( isset( $_POST['upload'] ) ) {
@@ -116,36 +108,45 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
 
   $last_dir_level = 0;
 
-  echo '<ul class="folderlist">';
-  $objects = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $startingfolder ), RecursiveIteratorIterator::SELF_FIRST );
+  $objects = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $startingfolder, RecursiveDirectoryIterator::SKIP_DOTS ), RecursiveIteratorIterator::SELF_FIRST );
   foreach ( $objects as $name => $object ) {
-    if ( $objects->isDot() ) continue;
-    if ( $objects->getDepth() > $last_dir_level ) {
+    $f[$name]['depth'] = $objects->getDepth();
+    $f[$name]['filename'] = $objects->getFilename();
+    $f[$name]['subpath'] = $objects->getSubPath();
+    $f[$name]['subpathname'] = $objects->getSubPathName();
+    $f[$name]['isdir'] = $objects->isDir();
+  }
+  uksort( $f, 'strcasecmp' );
+
+  echo '<ul class="folderlist">';
+  foreach ( $f as $n => $v ) {
+    if ( $v['depth'] > $last_dir_level ) {
       echo "<ul class=\"folderlist\">\n";
-      $last_dir_level = $objects->getDepth();
-    } elseif ( $objects->getDepth() < $last_dir_level ) {
-      echo "</ul>\n";
-      $last_dir_level = $objects->getDepth();
+      $last_dir_level = $v['depth'];
+    } elseif ( $v['depth'] < $last_dir_level ) {
+      for ( $i=$last_dir_level; $i>$v['depth']; $i-- ) {
+        echo "</ul>\n";
+      }
+      $last_dir_level = $v['depth'];
     }
     echo "<li";
-    if ( $objects->isDir() ) echo ' class="folder"';
-    echo ">".$objects->getFilename();
+    if ( $v['isdir'] ) echo ' class="folder"';
+    echo ">".$v['filename'];
 
     // buttons
     echo '<span class="buttons">';
-    echo ' <a href="index.php?action=delete&base='.$abbrev.'&file='.rawurlencode( $objects->getSubPathname() ).'"><img src="delete.png" border="0"></a>';
-
+    echo ' <a href="index.php?action=delete&base='.$abbrev.'&file='.rawurlencode( $v['subpathname'] ).'"><img src="delete.png" border="0"></a>';
 
     // edit name
-    ?>
+?>
     <a class="edit_icon"><img src="pencil-go-icon.png" border="0"></a>
 <div class="edit_div">
       New name: <form action="index.php" method="post">
-      <input type="hidden" name="base" value="<?php echo $abbrev; ?>"><input type="hidden" name="basef" value="<?php echo $objects->getSubPath(); ?>">
-      <input type="hidden" name="oldname" value="<? echo $objects->getFilename(); ?>">
+      <input type="hidden" name="base" value="<?php echo $abbrev; ?>"><input type="hidden" name="basef" value="<?php echo $v['subpath']; ?>">
+      <input type="hidden" name="oldname" value="<?php echo $v['filename']; ?>">
       <input type="text" name="newname"><input type="submit" name="rename" value="Rename"></form></div>
-<?
-    if ( $objects->isDir() ) {
+<?php
+    if ( $v['isdir'] ) {
 ?>
   <a class="arrow_up_icon"><img src="arrow_up.png"></a>
       <div class="upload_div">
@@ -153,17 +154,17 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
       <form action="index.php" method="post" enctype="multipart/form-data" id="uploadImage">
       <input type="hidden" name="base" value="<?php echo $abbrev; ?>">
       <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max; ?>">
-      <input type="hidden" name="basef" value="<?php echo $objects->getSubPathname(); ?>">
+      <input type="hidden" name="basef" value="<?php echo $v['subpathname']; ?>">
       <input type="file" name="image" id="image">
       <input type="submit" name="upload" id="upload" value="Upload"></form></div>
 
 <a class="folder_new_icon"><img src="folder_new.png" border="0"></a>
 <div class="newfolder_div">
       New subfolder: <form action="index.php" method="post">
-      <input type="hidden" name="base" value="<?php echo $abbrev; ?>"><input type="hidden" name="basef" value="<?php echo $objects->getSubPathname(); ?>">
+      <input type="hidden" name="base" value="<?php echo $abbrev; ?>"><input type="hidden" name="basef" value="<?php echo $v['subpathname']; ?>">
       <input type="text" name="newf"><input type="submit" name="subf" value="Create"></form></div>
     <?php } else { ?>
-      <a href="index.php?dl=1&base=<?php echo $abbrev; ?>&file=<?php echo rawurlencode( $objects->getSubPathname() ); ?>">
+      <a href="index.php?dl=1&base=<?php echo $abbrev; ?>&file=<?php echo rawurlencode( $v['subpathname'] ); ?>">
       <img src="arrow_down.png" border="0"></a>
     <?php }
     echo "</span></li>\n";
