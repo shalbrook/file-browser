@@ -49,12 +49,10 @@ if ( $_GET['action'] == 'delete' ) {
   if ( !preg_match( '/^[0-9A-Za-z\-_ \.]+$/', $_POST['newname'] ) ) {
     $result = array( 'You entered '.$_POST['newname'].'. New name must contain only letters and numbers.' );
   } else {
-    $oldfilename = $base;
-    if ( isset( $_POST['basef'] ) ) $oldfilename .= $_POST['basef'].'/';
-    $oldfilename .= $_POST['oldname'];
-    $newfilename = $base;
-    if ( isset( $_POST['basef'] ) ) $newfilename .= $_POST['basef'].'/';
-    $newfilename .= $_POST['newname'];
+    $c = $base;
+    if ( isset( $_POST['basef'] ) ) $c .= $_POST['basef'].'/';
+    $oldfilename = $c . $_POST['oldname'];
+    $newfilename = $c . $_POST['newname'];
     if ( rename( $oldfilename, $newfilename ) ) {
       $result = array( 'Successfully renamed.' );
     } else {
