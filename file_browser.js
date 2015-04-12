@@ -16,4 +16,6 @@ $(document).ready(function() {
   	$(this).next('ul.folderlist').toggle();
     $(this).toggleClass('plus');
   });
+
+  $( "ul.toplist li:odd" ).css( "background-color", "#ffffff" )
 });

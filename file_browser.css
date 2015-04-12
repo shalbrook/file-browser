@@ -27,21 +27,31 @@ table#filebrowsericonkey tr td img {
 .buttons {
 	float:right;
 }
+.buttons a img {
+	vertical-align: top;
+}
 .edit_div {
 	position:absolute;
 	z-index:100;
 	padding: 8px;
-	background-color: lightgray;
+	background-color: white;
+	border: 1px solid lightgray;
 }
 .upload_div {
 	position:absolute;
 	z-index:100;
 	padding: 8px;
-	background-color: lightgray;
+	background-color: white;
+	border: 1px solid lightgray;
 }
 .newfolder_div {
 	position:absolute;
 	z-index:100;
 	padding: 8px;
-	background-color: lightgray;
+	background-color: white;
+	border: 1px solid lightgray;
+}
+.toplist li {
+	font-family: arial, sans-serif;
+	font-size: 0.9em;
 }

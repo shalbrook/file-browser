@@ -84,7 +84,7 @@ if ( isset( $result ) ) {
 echo '<br>';
 
 function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
-<ul class="folderlist">
+<ul class="folderlist toplist">
 <li style="font-size: large"><strong><?php echo $friendlyname; ?></strong>
   <span class="buttons">
 <a class="arrow_up_icon"><img src="arrow_up.png" border="0"></a>
