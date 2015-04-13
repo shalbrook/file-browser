@@ -1,10 +1,13 @@
   <div align="center">
     <p class="filebrowserheader">File browser</p>
     <table id="filebrowsericonkey">
-      <tr><th colspan="6" class="filebrowserheader">Key:</th></tr>
-      <tr><td><img src="folder.png"> Folder</td>
+      <tr><th colspan="3" class="filebrowserheader">Key:</th></tr>
+      <tr>
+      <td><img src="folder.png"> Folder (click to collapse/expand)</td>
       <td><img src="delete.png"> Delete file or folder</td>
       <td><img src="arrow_up.png"> Upload file</td>
+    </tr>
+    <tr>
       <td><img src="arrow_down.png"> Download file</td>
       <td><img src="folder_new.png"> Create new subfolder</td>
       <td><img src="pencil-go-icon.png"> Edit file / folder name</td></tr>
