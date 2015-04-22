@@ -17,5 +17,5 @@ $(document).ready(function() {
     $(this).toggleClass('plus');
   });
 
-  $( "ul.toplist li:odd" ).css( "background-color", "#ffffff" )
+  $( "ul.toplist ul li:even" ).css( "background-color", "#ffffff" )
 });

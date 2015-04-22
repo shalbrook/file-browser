@@ -117,6 +117,7 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
     $f[$name]['subpathname'] = $objects->getSubPathName();
     $f[$name]['isdir'] = $objects->isDir();
   }
+  if (isset($f)) {
   uksort( $f, 'strcasecmp' );
 
   echo '<ul class="folderlist">';
@@ -170,9 +171,13 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
     <?php }
     echo "</span></li>\n";
   }
-?>
-  </ul></ul>
-<?php
+}
+//echo "<strong>last dir level = $last_dir_level</strong>";
+for ( $i=$last_dir_level; $i>=0; $i-- ) {
+        echo "</ul>\n";
+}
+echo "</ul></ul>\n";
+
 }
 ?>
 
@@ -180,7 +185,7 @@ function list_files( $friendlyname, $startingfolder, $abbrev ) { ?>
 <?php
 if ( !isset( $disable_private_folders ) ) {
   list_files( 'Your private folder', $rolefolder, 'r' );
-  echo '<br><hr width="600px" color="lightgray">';
+  echo '<br>';
 }
 list_files( 'Shared folder', $pubfolder, 'p' );
 ?>
